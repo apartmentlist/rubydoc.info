@@ -148,6 +148,14 @@ class GithubCheckout < ScmCheckout
 
   private
 
+  def auth
+    [settings.github['username'], settings.github['password']].join(':')
+  end
+
+  def clone_url
+    url.sub(/(www\.)?github.com/, "#{auth}@github.com")
+  end
+
   def git_checkout_command
     if File.directory?(repository_path)
       "cd #{repository_path} && git reset --hard && git pull --force"
@@ -160,7 +168,7 @@ class GithubCheckout < ScmCheckout
       end
       ["mkdir -p #{settings.repos}/#{project}/#{username}",
         "cd #{settings.repos}/#{project}/#{username}",
-        "git clone #{url} #{commit}", "cd #{commit}",
+        "git clone #{clone_url} #{commit}", "cd #{commit}",
         checkout, fork_cmd].compact.join(" && ")
     end
   end

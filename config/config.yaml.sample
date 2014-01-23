@@ -59,3 +59,8 @@
 #
 # disallowed_gems:
 #   - gemname
+
+# GitHub authentication for private repos
+# github:
+#   username:
+#   password:
