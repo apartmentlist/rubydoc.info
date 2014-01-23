@@ -149,10 +149,21 @@ class GithubCheckout < ScmCheckout
   private
 
   def auth
-    [settings.github['username'], settings.github['password']].join(':')
+    if ENV['GITHUB_USERNAME']
+      [
+        ENV['GITHUB_USERNAME'],
+        ENV['GITHUB_PASSWORD']
+      ].join(':')
+    elsif settings.github
+      [
+        settings.github['username'],
+        settings.github['password']
+      ].join(':')
+    end
   end
 
   def clone_url
+    return url unless auth
     url.sub(/(www\.)?github.com/, "#{auth}@github.com")
   end
 
